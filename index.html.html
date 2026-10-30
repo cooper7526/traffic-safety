@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>常見交通違規案例分析 - 防禦駕駛互動模擬</title>
+    <!-- Tailwind CSS 簡約樣式 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col items-center p-4 sm:p-6">
+
+    <!-- 頂部標題區 (放大字體) -->
+    <header class="max-w-3xl w-full text-center my-5">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">常見交通違規案例分析</h1>
+        <p class="text-base sm:text-lg text-slate-600 mt-2 font-medium">看得見風險，才有機會安全抵達！請做出一流職安人的防禦決策。</p>
+    </header>
+
+    <!-- 主卡片容器 -->
+    <main class="max-w-3xl w-full bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+        
+        <!-- 頂部計數與進度條 -->
+        <div id="quiz-header" class="bg-slate-900 text-white px-6 py-4 flex justify-between items-center text-sm font-bold">
+            <span id="scenario-tag" class="bg-amber-500 text-slate-900 px-3 py-1 rounded-md text-base sm:text-lg font-bold"></span>
+            <span id="progress-text" class="text-slate-300 text-base sm:text-lg"></span>
+        </div>
+
+        <!-- 答題進行區 -->
+        <div id="quiz-body" class="p-6 sm:p-8">
+            <!-- 題目名稱 (放大) -->
+            <h2 id="scenario-title" class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-4 leading-snug"></h2>
+            
+            <!-- 題幹描述 (放大字體與內襯) -->
+            <p id="scenario-desc" class="text-base sm:text-xl text-slate-700 mb-8 leading-relaxed bg-slate-50 p-5 rounded-xl border border-slate-200 font-medium"></p>
+
+            <!-- 抉擇選項按鈕 (放大字體與間距) -->
+            <div id="options-container" class="space-y-4">
+                <!-- 動態注入按鈕 -->
+            </div>
+
+            <!-- 防禦駕駛診斷講評區 (放大字體) -->
+            <div id="result-box" class="hidden mt-8 p-6 rounded-2xl border transition-all">
+                <div class="flex items-center gap-2 mb-3 font-extrabold text-lg sm:text-xl" id="result-header">
+                    <!-- 動態注入狀態 -->
+                </div>
+                
+                <!-- 解析內容 (放大) -->
+                <div class="space-y-4 text-base sm:text-lg mt-4">
+                    <div class="bg-white/90 p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm">
+                        <span class="font-bold text-slate-900 block mb-2 text-lg sm:text-xl">🔍 危害與法規解析：</span>
+                        <p id="analysis-text" class="text-slate-700 leading-relaxed font-normal"></p>
+                    </div>
+
+                    <div class="bg-amber-100/70 p-4 sm:p-5 rounded-xl border border-amber-300">
+                        <span class="font-bold text-amber-950 block mb-2 text-lg sm:text-xl">💡 職安宣導金句：</span>
+                        <p id="golden-quote" class="text-amber-900 font-semibold italic leading-relaxed"></p>
+                    </div>
+                </div>
+
+                <button id="next-btn" onclick="nextQuestion()" class="mt-6 w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-base sm:text-lg font-bold transition shadow-md">進行下一個案例 ➔</button>
+            </div>
+        </div>
+
+        <!-- 4 個案例結束後的結尾畫面 -->
+        <div id="ending-body" class="hidden p-8 sm:p-12 text-center space-y-6 bg-gradient-to-b from-amber-50/50 to-white">
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-amber-100 text-amber-600 mb-2">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            </div>
+            
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">恭喜完成交通安全案例學習！</h2>
+            
+            <p class="text-lg sm:text-xl text-slate-700 leading-relaxed max-w-xl mx-auto font-medium">
+                違規只是一瞬間，平安才是終點線。<br>
+                將「三不三要」內化為駕車習慣，守護自己，也守護他人的家庭。
+            </p>
+
+            <div class="p-6 bg-amber-50 border-2 border-amber-300 rounded-2xl max-w-md mx-auto shadow-sm">
+                <p class="text-amber-900 font-bold text-xl sm:text-2xl">
+                    ❤️ 職安衛科 關心您的安全
+                </p>
+                <p class="text-amber-800 text-sm sm:text-base mt-2">
+                    祝您每次出勤與通勤，都能平平安安出門、快快樂樂回家！
+                </p>
+            </div>
+
+            <div class="pt-4">
+                <button onclick="restartQuiz()" class="px-8 py-3.5 bg-amber-500 hover:bg-amber-600 text-slate-900 rounded-xl text-lg font-bold transition shadow-md">
+                    🔄 重新體驗與練習
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 底部三不三要宣導卡片 (文字放大) -->
+    <footer class="max-w-3xl w-full mt-6 bg-amber-500/10 border-2 border-amber-500/30 rounded-2xl p-5 text-amber-950">
+        <div class="font-extrabold text-lg sm:text-xl mb-3 text-amber-950 flex items-center gap-2">
+            <span>🛡️</span>
+            <span>防禦駕駛核心原則（三不與三要）：</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-base sm:text-lg font-medium">
+            <div class="bg-white/60 p-3.5 rounded-xl border border-amber-200">
+                <strong class="text-amber-900 text-lg sm:text-xl block mb-1">【三不】</strong>
+                • <strong>不搶快</strong> (遵守限速)<br>
+                • <strong>不違停</strong> (避開紅線/公車站)<br>
+                • <strong>不盲猜</strong> (死角不憑感覺)
+            </div>
+            <div class="bg-white/60 p-3.5 rounded-xl border border-amber-200">
+                <strong class="text-amber-900 text-lg sm:text-xl block mb-1">【三要】</strong>
+                • <strong>要打燈</strong> (轉彎變道提前30m)<br>
+                • <strong>要擺頭</strong> (排除A柱/兩側死角)<br>
+                • <strong>要通報</strong> (擦撞點交立即報警)
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 內建防禦駕駛教材資料庫 (資料源自《交通防禦駕駛及案例分析》)
+        const scenarios = [
+            {
+                id: 1,
+                tag: "案例 1：外勤臨停與車門風險",
+                title: "執行外勤任務需臨時下車處理業務",
+                desc: "你開車執行外勤業務，到達目的地附近發現繞了兩圈都沒車位。此時路邊公車站牌旁約有半個車身空位，但繪有紅線，後方還有緊跟的機車。你會怎麼做？",
+                options: [
+                    {
+                        id: "A",
+                        text: "打雙黃燈靠邊停在紅線與公車站旁，「停一下下處理完很快就走」。",
+                        isCorrect: false,
+                        status: "❌ 危險決策（違規且高風險）",
+                        analysis: "公車站牌 10 公尺內違停可罰款 $1,200 元。更嚴重的是，違停會逼迫後方機車繞道匯入主幹道，極易導致嚴重的後方追撞事故！此外，臨停下車若未落實『兩段式+反手開車門』，更易引發車門碰撞職災。",
+                        quote: "「別讓『停一下下』變成一輩子的遺憾！違停不只傷荷包，更是後方機車的致命陷阱。」"
+                    },
+                    {
+                        id: "B",
+                        text: "繼續前行尋找合法停車格或停車場；若需臨停合法地點，下車時落實『兩段式+反手開車門』。",
+                        isCorrect: true,
+                        status: "✅ 最佳防禦駕駛決策",
+                        analysis: "完全符合公司『不違停』原則！將車輛停放於合法位置，下車時養成『反手開車門（荷蘭式開門）』習慣，強迫身體轉向後方確認無來車，才能徹底排除視線死角，保障自身與用路人安全。",
+                        quote: "「寧走百步遠，不冒一步險。反手開車門，後方全看得見！」"
+                    }
+                ]
+            },
+            {
+                id: 2,
+                tag: "案例 2：速度管理與反應距離",
+                title: "市區道路趕時間與綠燈通行",
+                desc: "下班通勤時段市區限速 50 km/h，前方綠燈已經亮了一段時間，你車速約 62 km/h（超速約 10 多公里），心想『衝過去剛好過路口』。此時前方兩側有停放車輛且視線受阻。",
+                options: [
+                    {
+                        id: "A",
+                        text: "維持 60 多公里車速並稍微按喇叭，加速衝過路口。",
+                        isCorrect: false,
+                        status: "❌ 極高風險決策",
+                        analysis: "市區超速（61~64 km/h）除了面臨 $1,600 元罰鍰與違規記點外，最致命的是『煞車距離變長、反應時間被壓縮』！速度每增加一點，臨場修正空間大幅縮小，若兩側突有行人或車輛衝出將完全來不及反應。",
+                        quote: "「車速快 10 公里，反應少一半！欲速則不達，平安才是回家唯一的路。」"
+                    },
+                    {
+                        id: "B",
+                        text: "收油門減速至 50 km/h 以下，右腳移至煞車踏板（預備煞車），隨時準備停讓。",
+                        isCorrect: true,
+                        status: "✅ 最佳防禦駕駛決策",
+                        analysis: "遵守限速並落實『預測、減速、確認』防禦三步驟。將腳預備在煞車上能為你省下 0.5~1 秒的反應時間（車速 72 km/h 下 1 秒就滑行 20 公尺！），大幅提升應變空間。",
+                        quote: "「收油預備煞，風險全收下！不搶快，預留距離最安心。」"
+                    }
+                ]
+            },
+            {
+                id: 3,
+                tag: "案例 3：死角排除與行人停讓",
+                title: "路口左轉與 A 柱視線死角",
+                desc: "你駕車行經路口準備左轉，行人穿越道上有行人正在過馬路。此時車輛 A 柱剛好擋住左前方視線，後方車輛開始按喇叭催促。",
+                options: [
+                    {
+                        id: "A",
+                        text: "順著車速直接轉過去，憑感覺認為行人應該已經走過去了。",
+                        isCorrect: false,
+                        status: "❌ 重大危險決策",
+                        analysis: "憑感覺『盲猜』是事故主因！未停讓行人最高開罰 $6,000 元、記違規點數 3 點並須參加道安講習。若撞傷行人更面臨吊扣駕照與刑事責任。A 柱死角極易完全遮蔽行人！",
+                        quote: "「死角不憑感覺，轉灣一定要擺頭！車頭離行人維持 3 公尺（約 3 個枕木紋），尊重生命不硬塞。」"
+                    },
+                    {
+                        id: "B",
+                        text: "不受後車按喇叭影響，身體前傾並適當『擺頭』透過 A 柱前後觀察，確保無行人後再通過。",
+                        isCorrect: true,
+                        status: "✅ 最佳防禦駕駛決策",
+                        analysis: "落實防禦駕駛『要擺頭』原則！主動擺頭移動視線以克服 A 柱死角，並嚴格維持與行人 3 公尺以上安全距離（約 3 個枕木紋），展現專業職安素養。",
+                        quote: "「擺頭看一眼，死角全顯現！停讓行人不只護他人，更是保全自己。」"
+                    }
+                ]
+            },
+            {
+                id: 4,
+                tag: "案例 4：科技執法與變換車道",
+                title: "高架道路/科技執法路段變換車道",
+                desc: "你行經已設置『AI 影像辨識科技執法』的高架道路與主要路口，前方車輛行駛較慢，你準備向右變換車道超車。",
+                options: [
+                    {
+                        id: "A",
+                        text: "看準右側有空隙，直接切方向燈並同時轉向變換車道。",
+                        isCorrect: false,
+                        status: "❌ 違規且易肇事決策",
+                        analysis: "未依規定使用方向燈（未提前打燈或邊轉邊打）可開罰 $1,200 元，且科技執法全天候 AI 自動抓拍。後方車輛因無法預判你的動態，極易造成追撞！",
+                        quote: "「變道不打燈，後車驚魂閃！科技執法電眼在看，提前 30 公尺打燈才安全。」"
+                    },
+                    {
+                        id: "B",
+                        text: "變換車道前 30 公尺即全程開啟方向燈，確認後視鏡與側方死角無車後，再平順變換車道。",
+                        isCorrect: true,
+                        status: "✅ 最佳防禦駕駛決策",
+                        analysis: "貫徹『要打燈』原則！提前 30 公尺打方向燈是給後方用路人足夠的預警時間。科技執法環境下，遵守規則就是最聰明省錢的駕駛方式。",
+                        quote: "「方向燈是車輛的語言，提前預告才是安全之道！」"
+                    }
+                ]
+            }
+        ];
+
+        let currentIdx = 0;
+
+        function loadScenario(index) {
+            const scenario = scenarios[index];
+            document.getElementById('scenario-tag').innerText = scenario.tag;
+            document.getElementById('progress-text').innerText = `第 ${index + 1} / ${scenarios.length} 題`;
+            document.getElementById('scenario-title').innerText = scenario.title;
+            document.getElementById('scenario-desc').innerText = scenario.desc;
+            document.getElementById('result-box').classList.add('hidden');
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            scenario.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-5 border-2 border-slate-200 rounded-xl hover:border-amber-500 hover:bg-amber-50/50 transition flex items-start gap-4 group bg-slate-50/40 shadow-sm";
+                btn.onclick = () => selectOption(opt);
+                btn.innerHTML = `
+                    <span class="flex-shrink-0 w-8 h-8 rounded-full bg-slate-200 text-slate-800 flex items-center justify-center font-extrabold text-base group-hover:bg-amber-500 group-hover:text-white transition">${String.fromCharCode(65 + idx)}</span>
+                    <span class="text-base sm:text-xl font-medium text-slate-800 mt-0.5 leading-relaxed">${opt.text}</span>
+                `;
+                container.appendChild(btn);
+            });
+        }
+
+        function selectOption(option) {
+            const resultBox = document.getElementById('result-box');
+            const resultHeader = document.getElementById('result-header');
+            const analysisText = document.getElementById('analysis-text');
+            const goldenQuote = document.getElementById('golden-quote');
+
+            resultBox.classList.remove('hidden');
+
+            if (option.isCorrect) {
+                resultBox.className = "mt-8 p-6 rounded-2xl border-2 bg-emerald-50 border-emerald-300 text-emerald-950 shadow-sm";
+                resultHeader.className = "flex items-center gap-2 font-extrabold text-xl sm:text-2xl text-emerald-900";
+                resultHeader.innerHTML = `<span>${option.status}</span>`;
+            } else {
+                resultBox.className = "mt-8 p-6 rounded-2xl border-2 bg-rose-50 border-rose-300 text-rose-950 shadow-sm";
+                resultHeader.className = "flex items-center gap-2 font-extrabold text-xl sm:text-2xl text-rose-900";
+                resultHeader.innerHTML = `<span>${option.status}</span>`;
+            }
+
+            analysisText.innerText = option.analysis;
+            goldenQuote.innerText = option.quote;
+
+            // 平滑滾動至診斷講評區
+            resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function nextQuestion() {
+            currentIdx++;
+            if (currentIdx < scenarios.length) {
+                loadScenario(currentIdx);
+            } else {
+                // 展示結尾頁面
+                document.getElementById('quiz-header').classList.add('hidden');
+                document.getElementById('quiz-body').classList.add('hidden');
+                document.getElementById('ending-body').classList.remove('hidden');
+            }
+        }
+
+        function restartQuiz() {
+            currentIdx = 0;
+            document.getElementById('ending-body').classList.add('hidden');
+            document.getElementById('quiz-header').classList.remove('hidden');
+            document.getElementById('quiz-body').classList.remove('hidden');
+            loadScenario(0);
+        }
+
+        // 初始化載入第一個案例
+        loadScenario(0);
+    </script>
+</body>
+</html>
